@@ -12,18 +12,15 @@ class TicTacGame:
         print('*-----------*', flush=True)
 
     def validate_input(self):
-        input_err = True
-        while input_err:
-            str_inp = input()
-            if not str_inp.isdigit():
-                print('Error: Invalid input format\nTry again!')
-            elif int(str_inp) < 1 or int(str_inp) > 9:
-                print('Error: Invalid cell number\nTry again!')
-            elif self.board[int(str_inp)-1] != ' ':
-                print('Error: This cell is already taken\nTry again!')
-            else:
-                input_err = False
-        return int(str_inp)
+        if not self.cur_input:
+            self.cur_input = input()
+        if not self.cur_input.isdigit():
+            raise Exception('Error: Invalid input format')
+        elif int(self.cur_input) < 1 or int(self.cur_input) > 9:
+            raise Exception('Error: Invalid cell number')
+        elif self.board[int(self.cur_input)-1] != ' ':
+            raise Exception('Error: This cell is already taken')
+        return int(self.cur_input)
 
     def start_game(self):
         self.board = [' ']*9
@@ -31,6 +28,9 @@ class TicTacGame:
         self.combs = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
                       (0, 3, 6), (1, 4, 7), (2, 5, 8),
                       (0, 4, 8), (2, 4, 6)]
+        self.err = None
+        self.cur_input = None
+
         print('Start!')
         print('Cell numbers:')
         self.show_board(list(range(1, 10)))
@@ -40,6 +40,10 @@ class TicTacGame:
         return self.board[comb[0]]+self.board[comb[1]]+self.board[comb[2]]
 
     def check_winner(self):
+
+        if self.err:
+            return self.err
+
         for comb in self.combs:
             cur_str = self.get_combination(comb)
             if cur_str == self.cur_sym*3:
@@ -55,9 +59,24 @@ class TicTacGame:
     def make_move(self):
         self.cur_sym = '0' if self.cur_sym == 'x' else 'x'
         print('Player', self.cur_sym, 'turn : enter the cell number')
-        x = self.validate_input()
-        self.board[x-1] = self.cur_sym
-        self.show_board()
+        try:
+            pos = self.validate_input()
+        except Exception as e:
+            self.err = e
+        else:
+            self.board[pos-1] = self.cur_sym
+            self.show_board()
+
+    def validate_game(self, input_list):
+        self.start_game()
+        result = None
+        for inp in input_list:
+            self.cur_input = inp
+            self.make_move()
+            result = self.check_winner()
+            if result:
+                break
+        return result
 
 
 if __name__ == "__main__":

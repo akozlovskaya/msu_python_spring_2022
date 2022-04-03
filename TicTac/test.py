@@ -1,52 +1,49 @@
 import unittest
-from unittest.mock import patch
-import io
-import sys
 
 from tictactoe import TicTacGame
 
 
-class FirstTestClass(unittest.TestCase):
+class FinalsTestClass(unittest.TestCase):
 
-    tests_map = {
-        'Game over : Draw!': ['1', '2', '3', '5', '4', '7', '8', '6', '9'],
-        'Game over : x is the winner!': ['1', '2', '5', '4', '9'],
-        'Game over : 0 is the winner!': ['1', '2', '3', '5', '4', '8']
-    }
+    tests_map = [
+        # draw
+        ('Game over : Draw!', ['1', '2', '3', '5', '4', '7', '8', '6', '9']),
+        # diagonal
+        ('Game over : x is the winner!', ['1', '2', '5', '4', '9']),
+        ('Game over : 0 is the winner!', ['2', '3', '4', '5', '8', '7']),
+        # horizontal
+        ('Game over : x is the winner!', ['1', '5', '2', '4', '3']),
+        ('Game over : 0 is the winner!', ['2', '4', '1', '5', '8', '6']),
+        ('Game over : x is the winner!', ['7', '2', '8', '4', '9']),
+        # vertical
+        ('Game over : 0 is the winner!', ['1', '2', '3', '5', '4', '8']),
+        ('Game over : x is the winner!', ['1', '2', '4', '5', '7']),
+        ('Game over : 0 is the winner!', ['1', '3', '8', '6', '4', '9'])
+    ]
 
     def test_game(self):
         game = TicTacGame()
-        for result, user_input in self.tests_map.items():
+        for result, inp in self.tests_map:
             game.start_game()
-            with patch('builtins.input', side_effect=user_input):
-                winner = None
-                while not winner:
-                    game.make_move()
-                    winner = game.check_winner()
-                self.assertEqual(winner, result)
+            self.assertEqual(game.validate_game(inp), result)
 
 
-class SecondTestClass(unittest.TestCase):
+class ExceptionsTestClass(unittest.TestCase):
 
-    tests_map = {
-        'Error: Invalid cell number': ['5', '10', '2'],
-        'Error: This cell is already taken': ['1', '1', '2'],
-        'Error: Invalid input format': ['5', 'aaaaa', '1']
-    }
+    tests_map = [
+        ('Error: Invalid cell number', ['10']),
+        ('Error: Invalid cell number', ['0']),
+        ('Error: Invalid cell number', ['-5']),
+        ('Error: This cell is already taken', ['1', '1']),
+        ('Error: Invalid input format', ['aaaaa']),
+        ('Error: Invalid input format', [' '])
+    ]
 
-    def test_bad_input(self):
+    def test_game(self):
         game = TicTacGame()
-        for message, user_input in self.tests_map.items():
+        for result, inp in self.tests_map:
             game.start_game()
-            with patch('builtins.input', side_effect=user_input):
-                game.make_move()
-                # to save output
-                my_out = io.StringIO()
-                sys.stdout = my_out
-                game.make_move()
-                sys.stdout = sys.__stdout__
-                out_list = my_out.getvalue().split('\n')
-                self.assertEqual(out_list[1], message)
+            self.assertRaises(Exception, game.validate_game(inp), msg=result)
 
 
 if __name__ == '__main__':
