@@ -1,4 +1,4 @@
-"""  Модуль реализующий тесты для CustomList. """
+"""  Модуль, реализующий тесты для CustomList. """
 
 import unittest
 
@@ -6,7 +6,7 @@ from custom_list import CustomList
 
 
 class CustomListTestClass(unittest.TestCase):
-    """  Класс реализующий тесты для CustomList. """
+    """  Класс, реализующий тесты для CustomList. """
 
     def test_str(self):
         """  Метод, тестирующий строковое представление CustomList. """
