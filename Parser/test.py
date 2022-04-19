@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock
 from faker import Faker
+import sys
+import os
 from Parser import parse_html
 
 
@@ -24,8 +26,10 @@ class RandomHTMLFactory:
             return '<html>'+self.fake.text(max_nb_chars=50)
 
 
-def fun1(str):
+def fun1(str, attributes):
     print('open tag:', str)
+    for key in attributes:
+        print('\t', key, '=', attributes[key])
 
 
 def fun2(str):
@@ -40,6 +44,15 @@ class FirstTestClass(unittest.TestCase):
 
     factory = RandomHTMLFactory()
 
+    def setUp(self):
+        self.devnull = open(os.devnull, "w")
+        self.old_stdout = sys.stdout
+        sys.stdout = self.devnull
+
+    def tearDown(self):
+        sys.stdout = self.old_stdout
+        self.devnull.close()
+
     def test_mock(self):
         mock_1 = Mock()
         mock_2 = Mock()
@@ -49,12 +62,6 @@ class FirstTestClass(unittest.TestCase):
         self.assertEqual(mock_1.call_count, 3)
         self.assertEqual(mock_2.call_count, 5)
         self.assertEqual(mock_3.call_count, 3)
-
-    def test_callback(self):
-        parse_html(self.factory.html_str(), fun1, fun2, fun3)
-
-    def test_no_callback(self):
-        parse_html(self.factory.html_str())
 
     def test_invalid_string(self):
         with self.assertRaises(Exception, msg='Error: Invalid html string'):
