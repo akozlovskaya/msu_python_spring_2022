@@ -43,16 +43,34 @@ class DescriptorsTestClass(unittest.TestCase):
     def test_incorrect(self):
         """ Testing incorrect use of descriptors """
         my_data = Data()
+        my_data.num = 15
+        my_data.price = 10
+        my_data.name = '^_^'
         with self.assertRaises(Exception):
             my_data.num = 1.5
+        self.assertEqual(my_data.num, 15)
+        self.assertEqual(my_data.name, '^_^')
+        self.assertEqual(my_data.price, 10)
         with self.assertRaises(Exception):
             my_data.num = 'aaa'
+        self.assertEqual(my_data.num, 15)
+        self.assertEqual(my_data.name, '^_^')
+        self.assertEqual(my_data.price, 10)
         with self.assertRaises(Exception):
             my_data.name = 38
+        self.assertEqual(my_data.num, 15)
+        self.assertEqual(my_data.name, '^_^')
+        self.assertEqual(my_data.price, 10)
         with self.assertRaises(Exception):
             my_data.price = -1
+        self.assertEqual(my_data.num, 15)
+        self.assertEqual(my_data.name, '^_^')
+        self.assertEqual(my_data.price, 10)
         with self.assertRaises(Exception):
             my_data.price = 100.5
+        self.assertEqual(my_data.num, 15)
+        self.assertEqual(my_data.name, '^_^')
+        self.assertEqual(my_data.price, 10)
 
 
 if __name__ == '__main__':
