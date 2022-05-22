@@ -8,7 +8,7 @@ class CustomMeta(type):
     def __new__(cls, name, parents, attr):
         """ Called to create a new instance of class """
         magic_methods = dict((name, val) for name, val in attr.items()
-                             if name.startswith('__'))
+                             if name.startswith('__') and name.endswith('__'))
         custom = dict(('custom_' + name, val) for name, val in attr.items()
                       if not name.startswith('__'))
         new_attrs = {**custom, **magic_methods}
@@ -24,4 +24,4 @@ class CustomMeta(type):
 
         new_attrs['__setattr__'] = set_custom_attr
 
-        return type(name, parents, new_attrs)
+        return super(CustomMeta, cls).__new__(cls, name, parents, new_attrs)
