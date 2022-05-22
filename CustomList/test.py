@@ -4,10 +4,13 @@ import unittest
 
 from custom_list import CustomList
 
+
 def test_equal(test_class, list1, list2):
+    """  Поэлементное сравнение """
+
     test_class.assertEqual(len(list1), len(list2))
-    for i in range(len(list1)):
-        test_class.assertEqual(list1[i], list2[i])
+    for i, elem in enumerate(list1):
+        test_class.assertEqual(elem, list2[i])
 
 
 class CustomListTestClass(unittest.TestCase):
@@ -24,7 +27,7 @@ class CustomListTestClass(unittest.TestCase):
         custom_list = CustomList([])
         self.assertEqual(str(custom_list), "items = [], sum = 0")
 
-    def test_add_сustl_custl(self):
+    def test_add_custl_custl(self):
         """  Метод, тестирующий сложение CustomList и CustomList. """
 
         # a + b: len(a) == len(b)
@@ -36,7 +39,6 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_1, [5, 1, 3, 7])
         test_equal(self, list_2, [1, 2, 7, 5])
         self.assertEqual(type(add_result), CustomList)
-        
 
         # a + b: len(a) < len(b)
         list_1 = CustomList([5, 1, 3, 7])
@@ -55,8 +57,8 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_1, [5, 1, 3, 7])
         test_equal(self, list_2, [1, 2, 7])
         self.assertEqual(type(add_result), CustomList)
-    
-    def test_сustl_list(self):
+
+    def test_custl_list(self):
         """  Метод, тестирующий сложение CustomList и List. """
 
         # a + b: len(a) == len(b)
@@ -68,7 +70,7 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_1, [3, 4])
         test_equal(self, list_2, [1, 2])
         self.assertEqual(type(add_result), CustomList)
-        
+
         # a + b: len(a) < len(b)
         list_1 = CustomList([3, 4])
         list_2 = [1, 2, 5]
@@ -78,7 +80,7 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_1, [3, 4])
         test_equal(self, list_2, [1, 2, 5])
         self.assertEqual(type(add_result), CustomList)
-        
+
         # a + b: len(a) > len(b)
         list_1 = CustomList([3, 4])
         list_2 = [1]
@@ -121,7 +123,7 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_2, [3, 4, 5])
         self.assertEqual(type(add_result), CustomList)
 
-    def test_sub_сustl_custl(self):
+    def test_sub_custl_custl(self):
         """  Метод, тестирующий вычитание из CustomList CustomList. """
 
         # a - b: len(a) == len(b)
@@ -154,7 +156,7 @@ class CustomListTestClass(unittest.TestCase):
         test_equal(self, list_2, CustomList([1, 2, 7, 5]))
         self.assertEqual(type(sub_result), CustomList)
 
-    def test_sub_сustl_list(self):
+    def test_sub_custl_list(self):
         """  Метод, тестирующий вычитание из CustomList List. """
 
         # a - b: len(a) == len(b)
@@ -184,8 +186,8 @@ class CustomListTestClass(unittest.TestCase):
         true_result = CustomList([4, -1, -4, -5])
         test_equal(self, sub_result, true_result)
         test_equal(self, list_1, CustomList([5, 1, 3]))
-        test_equal(self, list_2, [1, 2, 7, 5])   
-        self.assertEqual(type(sub_result), CustomList) 
+        test_equal(self, list_2, [1, 2, 7, 5])
+        self.assertEqual(type(sub_result), CustomList)
 
     def test_sub_list_custl(self):
         """  Метод, тестирующий вычитание из List CustomList. """
