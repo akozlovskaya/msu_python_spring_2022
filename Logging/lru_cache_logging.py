@@ -3,22 +3,53 @@
 
 import sys
 import logging
+import logging.config
 
 
 class LRUCache:
     """  Кэш с вытеснием неиспользованных дольше всех значений """
 
     def __init__(self, limit=42, stream_log=False):
-        handlers = [logging.FileHandler(filename='tmp.log')]
+        log_config = {
+            "version": 1,
+            "formatters": {
+                "formatter_file": {
+                    "format": "%(levelname)s\t%(message)s",
+                },
+                "formatter_stream": {
+                    "format": "%(name)s\t%(levelname)s\t%(message)s",
+                },
+            },
+            "handlers": {
+                "file": {
+                    "level": "DEBUG",
+                    "class": "logging.FileHandler",
+                    "filename": "tmp.log",
+                    "formatter": "formatter_file",
+                },
+                "stream": {
+                    "level": "DEBUG",
+                    "class": "logging.StreamHandler",
+                    "formatter": "formatter_stream",
+                },
+            },
+            "loggers": {
+                "root": {
+                    "level": "DEBUG",
+                    "handlers": ["file"],
+                },
+                "stream_logger": {
+                    "level": "DEBUG",
+                    "handlers": ["stream"],
+                },
+            },
+        }
+        logging.config.dictConfig(log_config)
         if stream_log:
-            handlers.append(logging.StreamHandler(sys.stdout))
+            self.logger = logging.getLogger("stream_logger")
+        else:
+            self.logger = logging.getLogger()
 
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s\t%(levelname)s\t%(message)s',
-            handlers=handlers
-        )
-        self.logger = logging.getLogger()
         if not isinstance(limit, int) or limit <= 0:
             self.logger.error("bad limit")
             raise Exception("LRUCache: bad limit")
@@ -52,8 +83,10 @@ class LRUCache:
 
 if __name__ == "__main__":
     STREAM_LOG = '-s' in sys.argv
-    # Error:
-    # cache = LRUCache(-5, STREAM_LOG)
+    try:
+        cache = LRUCache(-5, STREAM_LOG)
+    except Exception:
+        pass
     cache = LRUCache(2, STREAM_LOG)
     cache.set("key_1", "val_1")
     cache.set("key_2", "val_2")
